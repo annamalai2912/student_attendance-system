@@ -1,0 +1,16 @@
+{
+  "attendance_warning_subject": "⚠️ Attendance Warning – {{name}}",
+  "attendance_warning_body": "Dear Parent,\n\n{{name}}'s attendance has dropped to {{percentage}}%, which is below the required 75%.\n\nPlease contact the class teacher immediately to discuss and take corrective action.\n\nRegards,\nAttendance Monitoring System",
+  "attendance_push_title": "⚠️ Low Attendance Alert",
+  "attendance_push_body": "{{name}}'s attendance is {{percentage}}%. Please take action.",
+
+  "fee_reminder_subject": "💰 Fee Due Reminder – {{name}}",
+  "fee_reminder_body": "Dear Parent,\n\nThis is a gentle reminder that a fee balance of ₹{{balance}} for {{name}} is due in {{days}} day(s).\nDue Date: {{dueDate}}\n\nPlease make the payment at the earliest to avoid any inconvenience.\n\nRegards,\nFee Management System",
+  "fee_push_title": "💰 Fee Due Reminder",
+  "fee_push_body": "₹{{balance}} due in {{days}} day(s) for {{name}}.",
+
+  "absent_today_subject": "📋 Absent Today – {{name}}",
+  "absent_today_body": "Dear Parent,\n\n{{name}} was marked ABSENT today ({{date}}).\n\nIf this is an error, please contact the school administration.\n\nRegards,\nAttendance Monitoring System",
+  "absent_push_title": "📋 Absent Today",
+  "absent_push_body": "{{name}} was marked absent on {{date}}."
+}
