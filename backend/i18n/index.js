@@ -7,6 +7,7 @@ i18next.use(Backend).init({
   initImmediate: false,
   fallbackLng: process.env.DEFAULT_LANG || 'en',
   supportedLngs: ['en', 'ta', 'te'],
+  preload:       ['en', 'ta', 'te'],   // load ALL languages at startup
   backend: {
     loadPath: path.join(__dirname, 'locales/{{lng}}/{{ns}}.json'),
   },
