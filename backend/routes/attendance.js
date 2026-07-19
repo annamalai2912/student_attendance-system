@@ -38,11 +38,18 @@ router.post('/mark', protect, authorize('admin', 'teacher'), async (req, res) =>
   }));
   await Attendance.bulkWrite(ops);
 
-  // Trigger absent alerts async
+  // Trigger absent alerts async — must select parent field for notifications
   const absentIds = records.filter(r => r.status === 'A').map(r => r.studentId);
   if (absentIds.length > 0) {
-    const students = await Student.find({ _id: { $in: absentIds } });
-    students.forEach(s => sendAbsentAlert(s, date).catch(console.error));
+    const students = await Student.find({ _id: { $in: absentIds } })
+      .select('name parent _id');
+    students.forEach(s => {
+      if (!s.parent?.email && !s.parent?.phone) {
+        console.warn(`⚠️  No parent contact for student ${s.name} — skipping alert`);
+        return;
+      }
+      sendAbsentAlert(s, date).catch(err => console.error(`Absent alert failed for ${s.name}:`, err.message));
+    });
   }
   res.json({ message: `Attendance marked for ${records.length} students` });
 });

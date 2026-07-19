@@ -19,6 +19,7 @@ const studentSchema = new mongoose.Schema({
     fcmToken:      { type: String, default: '' },
     whatsappOptIn: { type: Boolean, default: false },
     emailOptIn:    { type: Boolean, default: true },
+    smsOptIn:      { type: Boolean, default: true },
     pushOptIn:     { type: Boolean, default: true },
   },
   isActive: { type: Boolean, default: true },

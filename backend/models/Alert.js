@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const alertSchema = new mongoose.Schema({
   studentRef: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   type:       { type: String, enum: ['ATTENDANCE_WARNING', 'FEE_REMINDER', 'ABSENT_TODAY', 'CUSTOM_NOTIFICATION'], required: true },
-  channels:   [{ type: String, enum: ['email', 'push', 'whatsapp'] }],
+  channels:   [{ type: String, enum: ['email', 'push', 'whatsapp', 'sms'] }],
   language:   { type: String, enum: ['en', 'ta', 'te'], default: 'en' },
   title:      { type: String, default: '' },
   message:    { type: String, default: '' },

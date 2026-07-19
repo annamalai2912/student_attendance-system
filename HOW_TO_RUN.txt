@@ -1,0 +1,190 @@
+====================================================
+   STUDENT ATTENDANCE SYSTEM — HOW TO RUN
+====================================================
+
+PROJECT STRUCTURE
+-----------------
+attendance_system/
+  backend/    -> Node.js + Express + MongoDB  (runs on port 5000)
+  frontend/   -> React + Vite                 (runs on port 5173)
+
+
+PREREQUISITES
+-------------
+- Node.js  v18 or higher   (https://nodejs.org)
+- npm      v9  or higher   (comes with Node.js)
+- MongoDB Atlas account    (https://www.mongodb.com/cloud/atlas) — free tier is fine
+- Firebase project         (https://console.firebase.google.com) — for push notifications (optional)
+- Gmail account            — for email alerts (optional)
+
+
+====================================================
+STEP 1 — INSTALL DEPENDENCIES
+====================================================
+
+Open TWO separate terminal windows.
+
+-- Terminal 1 (Backend) --
+  cd attendance_system\backend
+  npm install
+
+-- Terminal 2 (Frontend) --
+  cd attendance_system\frontend
+  npm install
+
+
+====================================================
+STEP 2 — CONFIGURE ENVIRONMENT VARIABLES
+====================================================
+
+--- BACKEND ---
+Copy the example file:
+  cd attendance_system\backend
+  copy .env.example .env        (Windows)
+  cp  .env.example .env         (Mac/Linux)
+
+Open backend\.env and fill in:
+
+  PORT=5000
+  NODE_ENV=development
+  CLIENT_URL=http://localhost:5173
+
+  # MongoDB — paste your Atlas connection string here
+  MONGO_URI=mongodb+srv://<user>:<password>@cluster0.mongodb.net/attendance_db?retryWrites=true&w=majority
+
+  # JWT — any long random string
+  JWT_SECRET=replace_with_a_long_random_secret
+  JWT_EXPIRES_IN=24h
+
+  # Email alerts (optional)
+  GMAIL_USER=your.app@gmail.com
+  GMAIL_APP_PASS=xxxx xxxx xxxx xxxx
+
+  # Firebase push notifications (optional)
+  FIREBASE_PROJECT_ID=your-project-id
+  FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_KEY\n-----END PRIVATE KEY-----\n"
+  FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project.iam.gserviceaccount.com
+
+  WHATSAPP_ENABLED=false
+  DEFAULT_LANG=en
+  SUPPORTED_LANGS=en,ta,te
+  ATTENDANCE_THRESHOLD=75
+  FEE_ALERT_DAYS_BEFORE=5
+
+TIP — MongoDB Atlas setup:
+  1. Go to https://www.mongodb.com/cloud/atlas
+  2. Create a free cluster
+  3. Click "Connect" -> "Drivers" -> copy the connection string
+  4. Go to Network Access -> Add your current IP address
+  5. Paste the connection string into MONGO_URI above
+
+
+--- FRONTEND ---
+Copy the example file:
+  cd attendance_system\frontend
+  copy .env.example .env        (Windows)
+  cp  .env.example .env         (Mac/Linux)
+
+Open frontend\.env and fill in:
+
+  VITE_API_URL=http://localhost:5000/api
+
+  # Firebase web config (from Firebase Console -> Project Settings -> Your apps)
+  VITE_FIREBASE_API_KEY=your_api_key
+  VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+  VITE_FIREBASE_PROJECT_ID=your-project-id
+  VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+  VITE_FIREBASE_APP_ID=1:123:web:abc
+  VITE_FIREBASE_VAPID_KEY=your_vapid_key
+
+  NOTE: If you skip Firebase, push notifications won't work but everything else will.
+
+
+====================================================
+STEP 3 — RUN THE APPLICATION
+====================================================
+
+-- Terminal 1 (Backend) --
+  cd attendance_system\backend
+  npm run dev           <- development (auto-restarts on file changes)
+  npm start             <- production
+
+  Expected output:
+    MongoDB connected
+    Server running on http://localhost:5000
+
+-- Terminal 2 (Frontend) --
+  cd attendance_system\frontend
+  npm run dev
+
+  Expected output:
+    VITE ready in Xms
+    Local: http://localhost:5173/
+
+
+====================================================
+STEP 4 — OPEN THE APP
+====================================================
+
+  Browser:      http://localhost:5173
+  Health check: http://localhost:5000/api/health
+
+
+====================================================
+API ENDPOINTS REFERENCE
+====================================================
+
+  /api/auth/*           Login / Register
+  /api/students         Student management
+  /api/attendance       Attendance records
+  /api/fees             Fee management
+  /api/dashboard        Dashboard stats
+  /api/departments      Departments
+  /api/subjects         Subjects
+  /api/leaves           Leave requests
+  /api/reports          Generate reports (PDF / Excel)
+  /api/calendar         Academic calendar
+  /api/academic-years   Academic years
+  /api/health           Server health check
+
+
+====================================================
+COMMON ISSUES & FIXES
+====================================================
+
+Problem: "MongoDB connection failed"
+Fix:     Check MONGO_URI in backend\.env
+         Whitelist your IP in Atlas -> Network Access
+
+Problem: ECONNREFUSED on Windows
+Fix:     Already handled in server.js (family:4 forces IPv4)
+
+Problem: Frontend can't reach API
+Fix:     Make sure backend is running on port 5000
+         Confirm VITE_API_URL=http://localhost:5000/api
+
+Problem: CORS errors in browser
+Fix:     Confirm CLIENT_URL=http://localhost:5173 in backend\.env
+
+Problem: "Cannot find module" errors
+Fix:     Run "npm install" in the failing directory
+
+Problem: Firebase push notifications not working
+Fix:     Fill in all FIREBASE_* values in both .env files
+
+
+====================================================
+TECH STACK
+====================================================
+
+  Frontend   : React 19, Vite, React Router, Recharts, Axios
+  Backend    : Node.js, Express 4, Mongoose
+  Database   : MongoDB Atlas
+  Auth       : JWT (jsonwebtoken + bcryptjs)
+  Push Notif : Firebase Admin SDK
+  Email      : Nodemailer + Gmail SMTP
+  Reports    : PDFKit (PDF) + xlsx (Excel)
+  Scheduler  : node-cron
+  i18n       : i18next (English, Tamil, Telugu)
+
+====================================================

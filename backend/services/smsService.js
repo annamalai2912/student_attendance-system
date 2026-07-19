@@ -22,7 +22,10 @@ async function sendSMS(to, message) {
   if (!isEnabled()) return null;
 
   const phone = formatPhone(to);
-  if (!phone) return null;
+  if (!phone) {
+    console.error('Fast2SMS: invalid phone number →', to);
+    return null;
+  }
 
   try {
     const response = await axios.get(
@@ -30,7 +33,7 @@ async function sendSMS(to, message) {
       {
         params: {
           authorization: process.env.FAST2SMS_API_KEY,
-          route:         'q',        // Quick SMS — no DLT registration needed
+          route:         'q',        // Fast2SMS Quick SMS route (correct for dev API)
           message,
           language:      'english',
           flash:         0,
@@ -39,16 +42,22 @@ async function sendSMS(to, message) {
         timeout: 10000,
       }
     );
+    // Print full response so we can see exactly what Fast2SMS returned
+    console.log('Fast2SMS status:', response.status);
+    console.log('Fast2SMS response:', JSON.stringify(response.data));
     return response.data;
   } catch (err) {
-    console.error('Fast2SMS error:', err.response?.data || err.message);
-    return null;
+    const detail = err.response?.data || err.message;
+    console.error('Fast2SMS HTTP status:', err.response?.status);
+    console.error('Fast2SMS error:', JSON.stringify(detail));
+    throw new Error(typeof detail === 'object' ? JSON.stringify(detail) : detail);
   }
 }
 
+
 // ── Absent today ──────────────────────────────────────────────────────────────
 async function sendAbsentSMS(parent, studentName, date) {
-  if (!parent.smsOptIn || !parent.phone) return;
+  if (parent.smsOptIn === false || !parent.phone) return;
   const lng  = parent.preferredLang || 'en';
   const body = i18n.t('absent_today_body', { lng, name: studentName, date });
   return sendSMS(parent.phone, body);
@@ -56,7 +65,7 @@ async function sendAbsentSMS(parent, studentName, date) {
 
 // ── Attendance warning ────────────────────────────────────────────────────────
 async function sendAttendanceSMS(parent, studentName, percentage) {
-  if (!parent.smsOptIn || !parent.phone) return;
+  if (parent.smsOptIn === false || !parent.phone) return;
   const lng  = parent.preferredLang || 'en';
   const body = i18n.t('attendance_warning_body', { lng, name: studentName, percentage });
   return sendSMS(parent.phone, body);
@@ -64,7 +73,7 @@ async function sendAttendanceSMS(parent, studentName, percentage) {
 
 // ── Fee reminder ──────────────────────────────────────────────────────────────
 async function sendFeeSMS(parent, studentName, balance, dueDate, days) {
-  if (!parent.smsOptIn || !parent.phone) return;
+  if (parent.smsOptIn === false || !parent.phone) return;
   const lng  = parent.preferredLang || 'en';
   const body = i18n.t('fee_reminder_body', { lng, name: studentName, balance, dueDate, days });
   return sendSMS(parent.phone, body);

@@ -35,7 +35,7 @@ const htmlWrap = (body) => `
 </body></html>`;
 
 async function sendAttendanceAlert(parent, studentName, percentage) {
-  if (!parent.emailOptIn) return;
+  if (parent.emailOptIn === false) return;
   const lng     = parent.preferredLang || 'en';
   const subject = i18n.t('attendance_warning_subject', { lng, name: studentName });
   const body    = i18n.t('attendance_warning_body',    { lng, name: studentName, percentage });
@@ -48,7 +48,7 @@ async function sendAttendanceAlert(parent, studentName, percentage) {
 }
 
 async function sendFeeReminder(parent, studentName, balance, dueDate, days) {
-  if (!parent.emailOptIn) return;
+  if (parent.emailOptIn === false) return;
   const lng     = parent.preferredLang || 'en';
   const subject = i18n.t('fee_reminder_subject', { lng, name: studentName });
   const body    = i18n.t('fee_reminder_body',    { lng, name: studentName, balance, dueDate, days });
@@ -61,7 +61,7 @@ async function sendFeeReminder(parent, studentName, balance, dueDate, days) {
 }
 
 async function sendAbsentEmail(parent, studentName, date) {
-  if (!parent.emailOptIn) return;
+  if (parent.emailOptIn === false) return;
   const lng     = parent.preferredLang || 'en';
   const subject = i18n.t('absent_today_subject', { lng, name: studentName });
   const body    = i18n.t('absent_today_body',    { lng, name: studentName, date });
